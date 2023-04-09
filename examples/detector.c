@@ -66,7 +66,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
             if (get_current_batch(net)+200 > net->max_batches) dim = 608;
             //int dim = (rand() % 4 + 16) * 32;
             printf("%d\n", dim);
-            args.w = dim;
+            args.w = dim * 3; 
             args.h = dim;
 
             pthread_join(load_thread, 0);
@@ -76,7 +76,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
 
             #pragma omp parallel for
             for(i = 0; i < ngpus; ++i){
-                resize_network(nets[i], dim, dim);
+                resize_network(nets + i, dim * 3, dim);
             }
             net = nets[0];
         }
